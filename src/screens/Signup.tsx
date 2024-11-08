@@ -1,5 +1,4 @@
-import BackgroundImg from "@assets/background.png";
-import LogoImg from "@assets/logo.svg";
+import { useNavigation } from "@react-navigation/native";
 import {
   Center,
   Heading,
@@ -9,16 +8,21 @@ import {
   VStack,
 } from "@gluestack-ui/themed";
 
+import BackgroundImg from "@assets/background.png";
+import LogoImg from "@assets/logo.svg";
+
 import { Button } from "@components/Button";
 import { Input } from "@components/Input";
 
 export default function SignUp() {
+  const { goBack } = useNavigation();
+
   return (
     <ScrollView
       contentContainerStyle={{ flexGrow: 1 }}
       showsVerticalScrollIndicator={false}
     >
-      <VStack flex={1} bg="$gray700">
+      <VStack flex={1}>
         <Image
           source={BackgroundImg}
           alt="Pessoas treinando"
@@ -50,7 +54,12 @@ export default function SignUp() {
             <Button title="Criar e acessar" />
           </Center>
 
-          <Button title="Voltar para o login" variant="outline" mt={"$12"} />
+          <Button
+            title="Voltar para o login"
+            variant="outline"
+            mt={"$12"}
+            onPress={goBack}
+          />
         </VStack>
       </VStack>
     </ScrollView>

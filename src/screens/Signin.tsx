@@ -87,6 +87,8 @@ export default function SignIn() {
                   value={value}
                   onChangeText={onChange}
                   errorMessage={errors.email?.message}
+                  onSubmitEditing={handleSubmit(handleSignIn)}
+                  returnKeyType="send"
                 />
               )}
             />

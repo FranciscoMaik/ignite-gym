@@ -8,6 +8,8 @@ import {
   VStack,
 } from "@gluestack-ui/themed";
 import { useForm, Controller } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import BackgroundImg from "@assets/background.png";
 import LogoImg from "@assets/logo.svg";
@@ -22,6 +24,16 @@ type FormDataProps = {
   confirmPassword: string;
 };
 
+const signUpSchema = yup.object({
+  name: yup.string().required("Informe o nome"),
+  email: yup.string().email("E-mail inválido").required("Informe o e-mail"),
+  password: yup
+    .string()
+    .required("Informe a senha")
+    .min(6, "A senha deve ter pelo menos 6 caracteres"),
+  confirmPassword: yup.string().required("Confirme a senha"),
+});
+
 export default function SignUp() {
   const { goBack } = useNavigation();
 
@@ -29,7 +41,9 @@ export default function SignUp() {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormDataProps>();
+  } = useForm<FormDataProps>({
+    resolver: yupResolver(signUpSchema),
+  });
 
   function handleSignUp({
     confirmPassword,
@@ -69,7 +83,6 @@ export default function SignUp() {
             <Controller
               control={control}
               name="name"
-              rules={{ required: "Nome é obrigatório" }}
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder="Nome"
@@ -83,13 +96,6 @@ export default function SignUp() {
             <Controller
               control={control}
               name="email"
-              rules={{
-                required: "E-mail é obrigatório",
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: "E-mail inválido",
-                },
-              }}
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder="E-mail"
@@ -111,6 +117,7 @@ export default function SignUp() {
                   secureTextEntry
                   onChangeText={onChange}
                   value={value}
+                  errorMessage={errors.password?.message}
                 />
               )}
             />
@@ -126,6 +133,7 @@ export default function SignUp() {
                   value={value}
                   onSubmitEditing={handleSubmit(handleSignUp)}
                   returnKeyType="send"
+                  errorMessage={errors.confirmPassword?.message}
                 />
               )}
             />

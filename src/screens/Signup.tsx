@@ -31,7 +31,10 @@ const signUpSchema = yup.object({
     .string()
     .required("Informe a senha")
     .min(6, "A senha deve ter pelo menos 6 caracteres"),
-  confirmPassword: yup.string().required("Confirme a senha"),
+  confirmPassword: yup
+    .string()
+    .required("Confirme a senha")
+    .oneOf([yup.ref("password"), ""], "As senhas não conferem"),
 });
 
 export default function SignUp() {

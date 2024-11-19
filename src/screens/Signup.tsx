@@ -48,13 +48,15 @@ export default function SignUp() {
     resolver: yupResolver(signUpSchema),
   });
 
-  function handleSignUp({
-    confirmPassword,
-    email,
-    name,
-    password,
-  }: FormDataProps) {
-    console.log({ name });
+  function handleSignUp({ email, name, password }: FormDataProps) {
+    fetch("http://192.168.18.47:3333/users", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, name, password }),
+    });
   }
 
   return (

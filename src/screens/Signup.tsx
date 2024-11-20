@@ -7,6 +7,7 @@ import {
   Text,
   VStack,
 } from "@gluestack-ui/themed";
+import { api } from "@services/api";
 import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -48,15 +49,9 @@ export default function SignUp() {
     resolver: yupResolver(signUpSchema),
   });
 
-  function handleSignUp({ email, name, password }: FormDataProps) {
-    fetch("http://192.168.18.47:3333/users", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, name, password }),
-    });
+  async function handleSignUp({ email, name, password }: FormDataProps) {
+    const response = await api.post("/users", { email, name, password });
+    console.log(response.data);
   }
 
   return (

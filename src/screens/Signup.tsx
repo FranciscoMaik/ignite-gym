@@ -6,6 +6,7 @@ import {
   ScrollView,
   Text,
   VStack,
+  useToast,
 } from "@gluestack-ui/themed";
 import { api } from "@services/api";
 import { useForm, Controller } from "react-hook-form";
@@ -14,9 +15,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import BackgroundImg from "@assets/background.png";
 import LogoImg from "@assets/logo.svg";
+import axios from "axios";
 
 import { Button } from "@components/Button";
 import { Input } from "@components/Input";
+import { AppError } from "@utils/AppError";
 
 type FormDataProps = {
   name: string;
@@ -40,6 +43,7 @@ const signUpSchema = yup.object({
 
 export default function SignUp() {
   const { goBack } = useNavigation();
+  const toast = useToast();
 
   const {
     control,
@@ -50,8 +54,20 @@ export default function SignUp() {
   });
 
   async function handleSignUp({ email, name, password }: FormDataProps) {
-    const response = await api.post("/users", { email, name, password });
-    console.log(response.data);
+    try {
+      const response = await api.post("/users", { email, name, password });
+      console.log(response.data);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Erro ao criar conta. Tente novamente mais tarde";
+      toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      } as object);
+    }
   }
 
   return (

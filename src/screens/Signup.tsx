@@ -15,11 +15,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import BackgroundImg from "@assets/background.png";
 import LogoImg from "@assets/logo.svg";
-import axios from "axios";
 
 import { Button } from "@components/Button";
 import { Input } from "@components/Input";
 import { AppError } from "@utils/AppError";
+import { ToastMessage } from "@components/ToastMessage";
 
 type FormDataProps = {
   name: string;
@@ -63,10 +63,16 @@ export default function SignUp() {
         ? error.message
         : "Erro ao criar conta. Tente novamente mais tarde";
       toast.show({
-        title,
         placement: "top",
-        bgColor: "red.500",
-      } as object);
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            title={title}
+            action="error"
+            onClose={() => toast.close(id)}
+          />
+        ),
+      });
     }
   }
 
